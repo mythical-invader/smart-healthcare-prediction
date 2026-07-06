@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Healthcare Prediction System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-hover: #115e59;
+            --bg-color: #f0fdfa;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #ccfbf1 100%);
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #14b8a6, var(--primary));
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header-section i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        p.subtitle {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 12px 12px 40px; /* Padding for icon */
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
+        }
+
+        input[type="number"]:focus + i {
+            color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 118, 110, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Loading Spinner */
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 25px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Result Cards */
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+            text-align: center;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-box h3 { margin: 0 0 10px 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px;}
+        .result-box p { margin: 0 0 15px 0; font-weight: 500; }
+        .result-box small { display: block; font-size: 12px; opacity: 0.8; }
+
+        .Non-Diabetic { 
+            background-color: #f0fdf4; 
+            border: 2px solid #bbf7d0; 
+            color: #166534; 
+        }
+        .Pre-Diabetic { 
+            background-color: #fffbeb; 
+            border: 2px solid #fde68a; 
+            color: #92400e; 
+        }
+        .Diabetic { 
+            background-color: #fef2f2; 
+            border: 2px solid #fecaca; 
+            color: #991b1b; 
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">
+        <i class="fa-solid fa-notes-medical"></i>
+        <h2>Smart Clinical Risk Assessment</h2>
+        <p class="subtitle">Enter patient metrics for ML-powered diabetes stratification</p>
+    </div>
+
+    <form id="predictionForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Pregnancies</label>
+                <div class="input-wrapper">
+                    <input type="number" id="pregnancies" required min="0" step="1" placeholder="Number of pregnancies">
+                    <i class="fa-solid fa-person-pregnant"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Fasting Glucose (mg/dL)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="glucose" required min="0" step="0.1" placeholder="e.g. 115">
+                    <i class="fa-solid fa-cubes"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Blood Pressure (mm Hg)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="bp" required min="0" step="1" placeholder="Diastolic BP">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Skin Thickness (mm)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="skin" required min="0" step="1" placeholder="Triceps skinfold">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Insulin (IU/mL)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="insulin" required min="0" step="0.1" placeholder="2-Hour serum insulin">
+                    <i class="fa-solid fa-syringe"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Body Mass Index (BMI)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="bmi" required min="0" step="0.1" placeholder="Weight in kg/(height in m)^2">
+                    <i class="fa-solid fa-weight-scale"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Diabetes Pedigree Function</label>
+                <div class="input-wrapper">
+                    <input type="number" id="pedigree" required min="0" step="0.001" placeholder="Genetic risk score">
+                    <i class="fa-solid fa-dna"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Age (years)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="age" required min="1" step="1" placeholder="Patient age">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit">
+            <i class="fa-solid fa-microchip"></i> Analyze Patient Risk
+        </button>
+    </form>
+
+    <div class="loader" id="loader">
+        <i class="fa-solid fa-circle-notch spinner"></i> Processing ML Model...
+    </div>
+
+    <div id="resultBox" class="result-box">
+        <h3 id="classLabel"></h3>
+        <p id="recommendationText"></p>
+        <small id="probabilitiesText"></small>
+    </div>
+
+    <p style="text-align: center; font-size: 12px; color: #64748b; margin-top: 30px;">
+    &copy; 2026 by mythical-invader
+    </p>
+    
+</div>
+
+<script>
+    document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // UI Handling
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('resultBox').style.display = 'none';
+        document.getElementById('resultBox').className = 'result-box';
+
+        // Gather the 8 raw inputs
+        const preg = parseFloat(document.getElementById('pregnancies').value);
+        const glucose = parseFloat(document.getElementById('glucose').value);
+        const bp = parseFloat(document.getElementById('bp').value);
+        const skin = parseFloat(document.getElementById('skin').value);
+        const insulin = parseFloat(document.getElementById('insulin').value);
+        const bmi = parseFloat(document.getElementById('bmi').value);
+        const pedigree = parseFloat(document.getElementById('pedigree').value);
+        const age = parseFloat(document.getElementById('age').value);
+
+        const features = [preg, glucose, bp, skin, insulin, bmi, pedigree, age];
+
+        try {
+            // Send data to backend
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ features: features })
+            });
+            
+            const data = await response.json();
+            
+            // Catch Python Backend Errors
+            if (data.error) {
+                alert("PYTHON SERVER CRASHED! The error is:\n\n" + data.error);
+                document.getElementById('loader').style.display = 'none';
+                return;
+            }
+            
+            // Defining Icons for results
+            let iconHtml = '';
+            if(data.class_label === 'Non-Diabetic') iconHtml = '<i class="fa-solid fa-shield-check"></i> ';
+            if(data.class_label === 'Pre-Diabetic') iconHtml = '<i class="fa-solid fa-triangle-exclamation"></i> ';
+            if(data.class_label === 'Diabetic') iconHtml = '<i class="fa-solid fa-hospital-user"></i> ';
+
+            // Populate Results
+            document.getElementById('classLabel').innerHTML = iconHtml + data.class_label;
+            document.getElementById('recommendationText').innerText = data.recommendation;
+            
+            let probStr = `Model Confidence: Non-Diabetic (${data.probabilities['Non-Diabetic']}) | ` + 
+                          `Pre-Diabetic (${data.probabilities['Pre-Diabetic']}) | ` + 
+                          `Diabetic (${data.probabilities['Diabetic']})`;
+            document.getElementById('probabilitiesText').innerText = probStr;
+
+            // Apply styling
+            document.getElementById('resultBox').classList.add(data.class_label.replace(" ", "-"));
+            document.getElementById('resultBox').style.display = 'block';
+
+        } catch (error) {
+            alert('CRITICAL ERROR: Cannot connect to the server. Is your Python app.py terminal running?');
+            console.error(error);
+        } finally {
+            document.getElementById('loader').style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
