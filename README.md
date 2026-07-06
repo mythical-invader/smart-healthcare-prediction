@@ -56,7 +56,7 @@ Smart-Healthcare-Prediction/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/huzaifah-saleem/smart-healthcare-prediction.git
+git clone https://github.com/mythical-invader/smart-healthcare-prediction.git
 
 cd smart-healthcare-prediction
 ```
